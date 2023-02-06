@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">AllTrailsLunch</string>
+    <string name="nearby_places_request_error">There was a problem fetching nearby places</string>
+    <string name="location_permission_not_granted">Location permission not granted</string>
+    <string name="generic_location_error">There was a problem retrieving the current location</string>
+    <string name="map_toggle_text">Map</string>
+    <string name="list_toggle_text">List</string>
+    <string name="search_restaurants">Search restaurants</string>
+    <string name="alltrails_title_prefix">AllTrails</string>
+    <string name="alltrails_title_suffix">"  at lunch"</string>
+    <string name="open_now">Open now!</string>
+</resources>
