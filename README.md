@@ -22,3 +22,5 @@ into distinct modules fairly easily if the app were to grow in size.
 
 **ui package**:
 * Has all the UI Composables, ViewModels, and navigation logic
+
+* Recording of app being used: https://share.cleanshot.com/dmvPZMPT
