@@ -10,7 +10,7 @@ import com.squareup.moshi.Json
 data class PlaceDto(
     val geometry: GeometryDto,
     val name: String = "",
-    val photos: List<PhotoDto>,
+    val photos: List<PhotoDto> = emptyList(),
     val rating: Double = 0.0,
     @Json(name = "user_ratings_total")
     val userRatingsTotal: Int = 0,

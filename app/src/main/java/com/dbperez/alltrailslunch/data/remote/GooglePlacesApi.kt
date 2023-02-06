@@ -1,6 +1,6 @@
 package com.dbperez.alltrailslunch.data.remote
 
-import com.dbperez.alltrailslunch.data.remote.dto.NearbyPlacesResponseDto
+import com.dbperez.alltrailslunch.data.remote.dto.PlacesResponseDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -15,7 +15,7 @@ interface GooglePlacesApi {
         @Query("radius") radius: Int = 1500,
         @Query("type") type: String = "restaurant",
         @Query("key") key: String = API_KEY
-    ): NearbyPlacesResponseDto
+    ): PlacesResponseDto
 
     @GET("textsearch/json")
     suspend fun searchForPlace(
@@ -24,5 +24,5 @@ interface GooglePlacesApi {
         @Query("radius") radius: Int = 1500,
         @Query("type") type: String = "restaurant",
         @Query("key") key: String = API_KEY
-    ): NearbyPlacesResponseDto
+    ): PlacesResponseDto
 }
