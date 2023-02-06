@@ -24,3 +24,9 @@ into distinct modules fairly easily if the app were to grow in size.
 * Has all the UI Composables, ViewModels, and navigation logic
 
 * Recording of app being used: https://share.cleanshot.com/dmvPZMPT
+
+**Things I would clean up or change with more time**:
+* API key handling and api constants are all just hard coded right now which isn't what I would normally like to do.
+* Add unit tests for Api, ViewModel, and Repository classes. 
+* Pass in Modifiers into all the child composables to make them more re-usable. 
+* Do some Composable cleanup and pull them into their own files. 
