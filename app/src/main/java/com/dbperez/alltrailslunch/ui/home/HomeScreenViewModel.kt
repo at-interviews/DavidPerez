@@ -53,20 +53,43 @@ class HomeScreenViewModel @Inject constructor(
                     }
                 }
             }
-            .onEach { placesResource ->
-                state = when (placesResource) {
-                    is Resource.Error -> {
-                        HomeScreenUiState.Error(placesResource.message)
-                    }
+            .onEach { updateStateFromPlacesResource(it) }
+            .launchIn(viewModelScope)
+    }
+
+    fun onSearchSubmitted(searchInput: String) {
+        locationProvider.getCurrentLocation()
+            .flatMapLatest { locationResource ->
+                when (locationResource) {
                     is Resource.Loading -> {
-                        HomeScreenUiState.Loading
+                        flow { emit(Resource.Loading()) }
+                    }
+                    is Resource.Error -> {
+                        flow { emit(Resource.Error(locationResource.message)) }
                     }
                     is Resource.Success -> {
-                        HomeScreenUiState.PlaceList(placesResource.data ?: emptyList())
+                        locationResource.data?.let {
+                            placesRepository.searchForPlace(searchInput, locationResource.data)
+                        } ?: flow { emit(Resource.Error()) }
                     }
                 }
             }
+            .onEach { updateStateFromPlacesResource(it) }
             .launchIn(viewModelScope)
+    }
+
+    private fun updateStateFromPlacesResource(placesResource: Resource<List<Place>>) {
+        state = when (placesResource) {
+            is Resource.Error -> {
+                HomeScreenUiState.Error(placesResource.message)
+            }
+            is Resource.Loading -> {
+                HomeScreenUiState.Loading
+            }
+            is Resource.Success -> {
+                HomeScreenUiState.PlaceList(placesResource.data ?: emptyList())
+            }
+        }
     }
 
     fun toggleMapListView() {
@@ -99,10 +122,8 @@ class HomeScreenViewModel @Inject constructor(
             is HomeScreenUiState.PlaceMap -> {
                 state = HomeScreenUiState.PlaceList((state as HomeScreenUiState.PlaceMap).places)
             }
-            is HomeScreenUiState.PlaceDetails -> { getNearbyPlaces() }
-            else -> {
-                /* do nothing */
-            }
+            is HomeScreenUiState.PlaceDetails -> getNearbyPlaces()
+            else -> Unit
         }
     }
 
@@ -114,39 +135,6 @@ class HomeScreenViewModel @Inject constructor(
     fun onMapInfoWindowClosed() {
         selectedMapMarker?.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.map_pin_unselected))
         selectedMapMarker = null
-    }
-
-    fun onSearchSubmitted(searchInput: String) {
-        locationProvider.getCurrentLocation()
-            .flatMapLatest { locationResource ->
-                when (locationResource) {
-                    is Resource.Loading -> {
-                        flow { emit(Resource.Loading()) }
-                    }
-                    is Resource.Error -> {
-                        flow { emit(Resource.Error(locationResource.message)) }
-                    }
-                    is Resource.Success -> {
-                        locationResource.data?.let {
-                            placesRepository.searchForPlace(searchInput, locationResource.data)
-                        } ?: flow { emit(Resource.Error()) }
-                    }
-                }
-            }
-            .onEach { placesResource ->
-                state = when (placesResource) {
-                    is Resource.Error -> {
-                        HomeScreenUiState.Error(placesResource.message)
-                    }
-                    is Resource.Loading -> {
-                        HomeScreenUiState.Loading
-                    }
-                    is Resource.Success -> {
-                        HomeScreenUiState.PlaceList(placesResource.data ?: emptyList())
-                    }
-                }
-            }
-            .launchIn(viewModelScope)
     }
 
     fun onPlaceClicked(place: Place) {
